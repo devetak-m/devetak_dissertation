@@ -1,7 +1,5 @@
 # differentiable_Mark0
 
-[![codecov](https://codecov.io/gh/devetak-m/differentiable_Mark0/branch/main/graph/badge.svg?token=XO5413B03O)](https://codecov.io/gh/devetak-m/differentiable_Mark0)
-
 A differentiable implementation of Mark0 based on the original C++ code.
 
 Usage to replicate the Mark0 phase transition.
@@ -27,7 +25,7 @@ ylabel!("unemployment")
 
 ![plot](./plots/example.png)
 
-To get sloppy/stiff directions and compute the Hessian of the squared loss. Note we do not seek the hessian of the model, but rather a hessian of the mean squared loss of the sensitivity. If it seems odd, check equations (1), (2) and (3) in Karl's paper.
+To get sloppy/stiff directions and compute the Hessian of the squared loss. Note we do not seek the hessian of the model, but rather a hessian of the mean squared loss of the sensitivity.
 
 ```julia
 include("new_mark0.jl")
@@ -36,7 +34,7 @@ using ForwardDiff # note that the model is from 14 -> 200000
 using LinearAlgebra, Plots
 
 par = getParameters()
-lpar = log.(par) # log of parameters for calculations as dy(x)/dlog(x) = dy(e^u) / du <- i think?!
+lpar = log.(par) # log of parameters for calculations as dy(x)/dlog(x) = dy(e^u) / du
 f(p) = mark0_noCB(exp.(p), 2000, 41, 30000, 10000) # as in the paper
 @time A = ForwardDiff.jacobian(f, lpar) # 100s! a x27 times speed up, also note there is no need for such a long time series
 """
@@ -51,7 +49,7 @@ V, D = eigen(Symmetric(H))
 # lets see if the Hessian is any good
 
 stiff = D[:, end] # eigenvector of largest eigenvalue
-sloppy = D[:, 4] # eigenvector of fourth eigenvalue, note det(H) = 0 due to jacobian not being correct
+sloppy = D[:, 4] # eigenvector of fourth eigenvalue the first three are incorrect
 norm(stiff) == norm(sloppy) == true # they are both of the same size
 
 f(p) = mark0_noCB(exp.(p), 2000, 41, 2000) # smaller time-series
@@ -62,8 +60,5 @@ xlabel!("time")
 ylabel!("unemployment")
 # great success!
 ```
-
-Note that y1 
-
 
 ![plot](./plots/exampleHessian.png)
