@@ -1,4 +1,4 @@
-export get_M_Matrix, getHarfindalIndex, getSupplyMatrix, getRegularMatrix, getEmpiricalMatrix, findCommunities, adjustedMutualInformation, generateVector, computeOverlap
+export get_M_Matrix, getHarfindalIndex, getSupplyMatrix, getRegularMatrix, getEmpiricalMatrix, findCommunities, adjustedMutualInformation, generateVector, computeOverlap, getHomEconomy, getHetEconomy
 
 function get_M_Matrix(state::EconomyState)
     am = 1 .- state.economy.labourIntensity
@@ -215,4 +215,22 @@ end
 
 function computeOverlap(vector1, vector2)
     return dot(vector1, vector2) / (norm(vector1) * norm(vector2))
+end
+
+function getHomEconomy(numberOfFirms, technologyMatrix, supplyMatrix, numberOfRounds, t)
+
+    a = ones(numberOfFirms) .* 0.3
+    p = ones(numberOfFirms) * 1.5
+
+    return generateDynamics(p, a, technologyMatrix, supplyMatrix, t)
+
+end
+
+function getHetEconomy(numberOfFirms, technologyMatrix, supplyMatrix, numberOfRounds, t)
+
+    a = ones(numberOfFirms) .* 0.3
+    p = rand(numberOfFirms) * 3.
+
+    return generateDynamics(p, a, technologyMatrix, supplyMatrix, t)
+
 end
